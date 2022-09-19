@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BossTweet.DataAccess", "Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BossTweet.UnitTests", "UnitTests\BossTweet.UnitTests.csproj", "{63F8D18B-274E-42CB-86E9-80E714DA93AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BossTweet.Core", "Core\BossTweet.Core.csproj", "{A50305D1-F2FA-4148-B063-CF7463478548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{63F8D18B-274E-42CB-86E9-80E714DA93AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63F8D18B-274E-42CB-86E9-80E714DA93AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63F8D18B-274E-42CB-86E9-80E714DA93AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A50305D1-F2FA-4148-B063-CF7463478548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A50305D1-F2FA-4148-B063-CF7463478548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A50305D1-F2FA-4148-B063-CF7463478548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A50305D1-F2FA-4148-B063-CF7463478548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
