@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core\BossTweet.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-namespace BossTweet;
+namespace BossTweet.Services;
 
 public class WeatherForecast
 {
