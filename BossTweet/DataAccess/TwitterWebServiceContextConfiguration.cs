@@ -1,14 +1,8 @@
 ﻿namespace BossTweet.DataAccess;
 
-public class TwitterWebServiceContextConfiguration
+public class TwitterWebServiceContextConfiguration : ITwitterWebServiceContextConfiguration
 {
+    public string? BaseURI { get; set; }
 
-    public string AuthURI { get; set; }
-
-    public string BaseURI { get; set; }
-
-    public string ClientID { get; set; }
-
-    public string ClientSecret { get; set; }
-
+    public string? BearerToken { get; set; }
 }

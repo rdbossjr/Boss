@@ -1,13 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <AssemblyTitle>BossTweet.Services</AssemblyTitle>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Business\BossTweet.Business.csproj">
+          <Private>True</Private>
+        </ProjectReference>
+        <ProjectReference Include="..\Core\BossTweet.Core.csproj">
+          <Private>True</Private>
+        </ProjectReference>
+        <ProjectReference Include="..\DataAccess\BossTweet.DataAccess.csproj">
+          <Private>True</Private>
+        </ProjectReference>
+    </ItemGroup>
 
 </Project>

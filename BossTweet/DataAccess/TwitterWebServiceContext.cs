@@ -1,21 +1,23 @@
-﻿namespace BossTweet.DataAccess;
+﻿using System.Text;
 
-public class TwitterWebServiceContext
+namespace BossTweet.DataAccess;
+
+public class TwitterWebServiceContext : ITwitterWebServiceContext
 {
-    protected const string NoEndPointUrlMessage = "EndPointUrl must be set before this method can be used.";
-    private const string BearerAuthHeaderType = "Bearer";
     private HttpClient? _client;
     private string? _endpointUrl;
+    private bool _isDisposed;
 
-    public TwitterWebServiceContext(TwitterWebServiceContextConfiguration configuration)
+    public TwitterWebServiceContext(ITwitterWebServiceContextConfiguration configuration)
     {
         ContextConfiguration = configuration;
         BaseUrl = configuration.BaseURI;
+        BearerAuthorization = configuration.BearerToken;
     }
 
-    public string BaseUrl { get; set; }
+    public string? BaseUrl { get; set; }
 
-    public string BearerAuthorization { get; set; }
+    public string? BearerAuthorization { get; set; }
 
     public HttpClient Client
     {
@@ -23,13 +25,13 @@ public class TwitterWebServiceContext
         set => _client = value;
     }
 
-    public HttpContent Content { get; set; }
+    public HttpContent? Content { get; set; }
 
-    public TwitterWebServiceContextConfiguration ContextConfiguration { get; set; }
+    public ITwitterWebServiceContextConfiguration? ContextConfiguration { get; set; }
 
-    public string EndPointRoute { get; set; }
+    public string? EndPointRoute { get; set; }
 
-    public string EndPointUrl
+    public string? EndPointUrl
     {
         get
         {
@@ -38,63 +40,36 @@ public class TwitterWebServiceContext
                 return _endpointUrl;
             }
 
-            _endpointUrl = BaseUrl + EndPointRoute + QueryString;
+            _endpointUrl = BaseUrl + EndPointRoute + BuildQueryString();
 
             return _endpointUrl;
         }
     }
 
-    public string? QueryString { get; set; }
+    public List<KeyValuePair<string, string>> QueryStrings { get; } = new();
 
-    public async Task<T> CallEndPoint<T>(HttpMethod? method = null)
+    public void Dispose(bool disposing)
     {
-        if (string.IsNullOrWhiteSpace(EndPointUrl))
-        {
-            throw new NullReferenceException(NoEndPointUrlMessage);
-        }
+        if (_isDisposed) return;
 
-        method ??= HttpMethod.Post;
-
-        object? returnResult = null;
-
-        using var message = new HttpRequestMessage(
-            method,
-            EndPointUrl)
-        {
-            Content = Content
-        };
-
-        if (!string.IsNullOrWhiteSpace(BearerAuthorization))
-        {
-            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
-                BearerAuthHeaderType,
-                BearerAuthorization);
-        }
-
-        using var response = await Client.SendAsync(message);
-
-        response.EnsureSuccessStatusCode();
-
-        if (typeof(T) == typeof(string))
-        {
-            returnResult = await response.Content.ReadAsStringAsync();
-        }
-
-        return (T)returnResult;
-    }
-
-    public T DeSerialize<T>(string serializedObject)
-    {
-        throw new NotImplementedException();
+        _isDisposed = true;
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        Dispose(false);
+        GC.SuppressFinalize(this);
     }
 
-    public string Serialize<T>(T value)
+    private string BuildQueryString()
     {
-        throw new NotImplementedException();
+        var queryString = new StringBuilder("?");
+
+        foreach (var pair in QueryStrings)
+        {
+            queryString.Append($"{pair.Key}={pair.Value}&");
+        }
+
+        return queryString.ToString().TrimEnd('&').TrimEnd('?');
     }
 }

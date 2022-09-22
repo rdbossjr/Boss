@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Business\BossTweet.Business.csproj" />
     <ProjectReference Include="..\DataAccess\BossTweet.DataAccess.csproj" />
   </ItemGroup>
 

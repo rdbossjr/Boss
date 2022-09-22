@@ -1,65 +1,73 @@
-﻿using System.IO;
-using System.Text;
+﻿using BossTweet.Core.Entities.Twitter;
+using Newtonsoft.Json;
 
 namespace BossTweet.DataAccess;
 
-public class TwitterWebServiceRepository
+public class TwitterWebServiceRepository : ITwitterWebServiceRepository
 {
-    public TwitterWebServiceRepository(TwitterWebServiceContext webServiceContext)
+    private bool _isDisposed;
+
+    public TwitterWebServiceRepository(ITwitterWebServiceContext webServiceContext)
     {
         WebServiceContext = webServiceContext;
     }
 
-    protected TwitterWebServiceRepository()
-    {
-    }
-
-    public TwitterWebServiceContext WebServiceContext { get; set; }
-
-    public async Task<T> CallEndPoint<T>(HttpMethod method)
-    {
-        var returnResult = await WebServiceContext.CallEndPoint<T>(method);
-
-        return returnResult;
-    }
+    public ITwitterWebServiceContext WebServiceContext { get; set; }
 
     public void Dispose(bool disposing)
     {
+        if (_isDisposed) return;
+
         if (disposing)
         {
             WebServiceContext?.Dispose();
         }
+
+        _isDisposed = true;
     }
 
-    public string GetStreamSerialized()
+    public void Dispose()
     {
-        var streamResult = new StringBuilder();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        using (HttpClient httpClient = new HttpClient())
+    //todo: refactor to use generics in baseclass for future reuse by other repositories
+    /// <summary>
+    /// Retrieves n number of objects from a streaming web service.
+    /// </summary>
+    /// <param name="numberOfObjects">maximum number of objects of type T to be returned</param>
+    /// <returns>List of T</returns>
+    public List<Tweet> GetStreamSerializedToObjects(int numberOfObjects = 100)
+    {
+        var returnList = new List<Tweet>();
+        var httpClient = WebServiceContext.Client;
+        var requestUri = WebServiceContext.EndPointUrl;
+
+        if (!string.IsNullOrWhiteSpace(WebServiceContext.BearerAuthorization))
         {
-            if (!string.IsNullOrWhiteSpace(WebServiceContext.BearerAuthorization))
-            {
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
-                    "Bearer",
-                    WebServiceContext.BearerAuthorization);
-            }
-
-            httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
-            var requestUri = WebServiceContext.EndPointUrl;
-            var stream = httpClient.GetStreamAsync(requestUri).Result;
-
-            using (var reader = new StreamReader(stream))
-            {
-                for (int i = 0; i < 100; i++)
-
-                {
-
-                    //We are ready to read the stream
-                    streamResult.AppendLine(reader.ReadLine());
-                }
-            }
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer",
+                WebServiceContext.BearerAuthorization);
         }
 
-        return streamResult.ToString();
+        httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+
+        var stream = httpClient.GetStreamAsync(requestUri).Result;
+
+        using var reader = new StreamReader(stream);
+
+        for (var i = 0; i < numberOfObjects; i++)
+        {
+            var lineRead = reader.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(lineRead)) continue;
+
+            var tDeserialized = JsonConvert.DeserializeObject<Tweet>(lineRead, new JsonSerializerSettings());
+
+            returnList.Add(tDeserialized);
+        }
+
+        return returnList;
     }
 }
