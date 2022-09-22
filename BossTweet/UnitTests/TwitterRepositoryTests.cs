@@ -1,4 +1,6 @@
 using BossTweet.DataAccess;
+using BossTweet.DataAccess.Contexts;
+using BossTweet.DataAccess.Repositories;
 
 namespace BossTweet.UnitTests;
 
@@ -17,7 +19,7 @@ public class TwitterRepositoryTests
         {
             BaseURI = "https://api.twitter.com/2/tweets/",
 
-            BearerToken = "AAAAAAAAAAAAAAAAAAAAAN0OhQEAAAAAUNokTxaXSBdMgAwYz4W03fb31HI%3DcEFt4Ia3Ro3S7k16KnbJiIGrijNQI1Pk3zXJ2Xy9iuAbrKqU1f" //"GET CLIENT SECRET FROM SEPARATE FILE";
+            BearerToken = "" // TODO: GET BEARER TOKEN FROM DAVID;
         };
 
         var twitterContext = new TwitterWebServiceContext(twitterConfig);
@@ -45,7 +47,7 @@ public class TwitterRepositoryTests
         {
             BaseURI = "https://api.twitter.com/2/tweets/",
 
-            BearerToken = "AAAAAAAAAAAAAAAAAAAAAN0OhQEAAAAAUNokTxaXSBdMgAwYz4W03fb31HI%3DcEFt4Ia3Ro3S7k16KnbJiIGrijNQI1Pk3zXJ2Xy9iuAbrKqU1f" //"GET CLIENT SECRET FROM SEPARATE FILE";
+            BearerToken = "" //TODO: GET BEARER TOKEN FROM DAVID;
         };
 
         var twitterContext = new TwitterWebServiceContext(twitterConfig);
