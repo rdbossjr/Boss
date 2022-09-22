@@ -1,4 +1,4 @@
-﻿namespace BossTweet.DataAccess;
+﻿namespace BossTweet.DataAccess.Interfaces;
 
 public interface ITwitterWebServiceContext : IDisposable
 {

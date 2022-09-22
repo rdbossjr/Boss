@@ -1,4 +1,5 @@
-using BossTweet.DataAccess;
+using BossTweet.DataAccess.Contexts;
+using BossTweet.DataAccess.Interfaces;
 using BossTweet.Services.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

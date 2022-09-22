@@ -1,9 +1,10 @@
-﻿using BossTweet.Business;
-using BossTweet.Core.Entities;
+﻿using BossTweet.Core.Entities;
 using BossTweet.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using BossTweet.DataAccess;
+using BossTweet.Services.Base;
+using BossTweet.DataAccess.Interfaces;
+using BossTweet.Business.Interfaces;
 
 namespace BossTweet.Services.Controllers;
 

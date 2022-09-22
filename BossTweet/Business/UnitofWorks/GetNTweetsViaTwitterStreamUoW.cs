@@ -1,8 +1,9 @@
-﻿using BossTweet.Core.Business;
+﻿using BossTweet.Business.Interfaces;
+using BossTweet.Core.Business;
 using BossTweet.Core.Entities.Twitter;
-using BossTweet.DataAccess;
+using BossTweet.DataAccess.Interfaces;
 
-namespace BossTweet.Business;
+namespace BossTweet.Business.UnitofWorks;
 
 public class GetNTweetsViaTwitterStreamUoW : UnitofWorkBase<IList<Tweet>>, IGetNTweetsViaTwitterStreamUoW
 {

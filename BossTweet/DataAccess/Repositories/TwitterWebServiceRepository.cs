@@ -1,7 +1,8 @@
 ﻿using BossTweet.Core.Entities.Twitter;
+using BossTweet.DataAccess.Interfaces;
 using Newtonsoft.Json;
 
-namespace BossTweet.DataAccess;
+namespace BossTweet.DataAccess.Repositories;
 
 public class TwitterWebServiceRepository : ITwitterWebServiceRepository
 {
