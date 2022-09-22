@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace BossTweet.Controllers;
+namespace BossTweet.Services.Controllers;
+
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
