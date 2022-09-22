@@ -4,7 +4,7 @@ using BossTweet.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace BossTweet.Services;
+namespace BossTweet.Services.Base;
 
 public class BossTweetControllerBase : Controller
 {

@@ -1,6 +1,6 @@
 ﻿using BossTweet.Core.Entities.Twitter;
 
-namespace BossTweet.DataAccess;
+namespace BossTweet.DataAccess.Interfaces;
 
 public interface ITwitterWebServiceRepository : IDisposable
 {

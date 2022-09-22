@@ -1,7 +1,8 @@
-﻿using BossTweet.Core.Business;
+﻿using BossTweet.Business.Interfaces;
+using BossTweet.Core.Business;
 using BossTweet.Core.Entities;
 
-namespace BossTweet.Business;
+namespace BossTweet.Business.UnitofWorks;
 
 public class GetTweetStatisticsUoW : UnitofWorkBase<ITweetStatistics>, IGetTweetStatisticsUoW
 {

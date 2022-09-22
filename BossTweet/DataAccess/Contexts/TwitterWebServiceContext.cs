@@ -1,6 +1,7 @@
 ﻿using System.Text;
+using BossTweet.DataAccess.Interfaces;
 
-namespace BossTweet.DataAccess;
+namespace BossTweet.DataAccess.Contexts;
 
 public class TwitterWebServiceContext : ITwitterWebServiceContext
 {

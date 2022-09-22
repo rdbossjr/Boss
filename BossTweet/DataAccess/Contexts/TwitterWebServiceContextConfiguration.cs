@@ -1,4 +1,6 @@
-﻿namespace BossTweet.DataAccess;
+﻿using BossTweet.DataAccess.Interfaces;
+
+namespace BossTweet.DataAccess.Contexts;
 
 public class TwitterWebServiceContextConfiguration : ITwitterWebServiceContextConfiguration
 {
