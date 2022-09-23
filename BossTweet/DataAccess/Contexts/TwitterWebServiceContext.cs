@@ -1,5 +1,5 @@
-﻿using System.Text;
-using BossTweet.DataAccess.Interfaces;
+﻿using BossTweet.DataAccess.Interfaces;
+using System.Text;
 
 namespace BossTweet.DataAccess.Contexts;
 

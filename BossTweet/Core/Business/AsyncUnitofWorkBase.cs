@@ -1,6 +1,6 @@
 ﻿namespace BossTweet.Core.Business;
 
-public abstract class AsyncUnitofWorkBase<T>
+public abstract class AsyncUnitofWorkBase<T> : IAsyncUnitofWork<T>
 {
     public int ReturnCode { get; set; }
 
@@ -8,7 +8,7 @@ public abstract class AsyncUnitofWorkBase<T>
 
     public string? ReturnMessage { get; set; }
 
-    protected T? ReturnObject { get; set; }
+    public T? ReturnObject { get; set; }
 
     public virtual async Task<T> Execute()
     {

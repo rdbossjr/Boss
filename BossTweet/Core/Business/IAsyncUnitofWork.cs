@@ -3,6 +3,4 @@
 public interface IAsyncUnitofWork<T>
 {
     Task<T> Execute();
-
-    Task<bool> Rollback();
 }

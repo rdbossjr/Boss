@@ -4,27 +4,27 @@ using BossTweet.Core.Entities;
 
 namespace BossTweet.Business.UnitofWorks;
 
-public class GetTweetStatisticsUoW : UnitofWorkBase<ITweetStatistics>, IGetTweetStatisticsUoW
+public class GetTweetStatisticsByTimeAsyncUoW : AsyncUnitofWorkBase<ITweetStatistics>, IGetTweetStatisticsByTimeAsyncUoW
 {
-    private readonly IGetNTweetsViaTwitterStreamUoW _getNTweetsViaTwitterStreamUoW;
+    private readonly IGetTweetsViaStreamByTimeAsyncUoW _getTweetsViaStreamByTimeAsyncUoW;
 
-    public GetTweetStatisticsUoW(IGetNTweetsViaTwitterStreamUoW getNTweetsViaTwitterStreamUoW)
+    public GetTweetStatisticsByTimeAsyncUoW(IGetTweetsViaStreamByTimeAsyncUoW getNTweetsViaTwitterStreamUoW)
     {
-        _getNTweetsViaTwitterStreamUoW = getNTweetsViaTwitterStreamUoW;
+        _getTweetsViaStreamByTimeAsyncUoW = getNTweetsViaTwitterStreamUoW;
     }
 
-    public int NoOfTweetsToGet { get; set; } = 1000;
+    public int NoOfMilliseconds { get; set; } = 1000;
 
-    protected override ITweetStatistics ImplementExecute()
+    protected override async Task<ITweetStatistics> ImplementExecute()
     {
-        _getNTweetsViaTwitterStreamUoW.Repository.WebServiceContext.QueryStrings.Add(
+        _getTweetsViaStreamByTimeAsyncUoW.Repository.WebServiceContext.QueryStrings.Add(
                 new KeyValuePair<string, string>(
                     "tweet.fields",
                     "entities,id"));
 
-        _getNTweetsViaTwitterStreamUoW.NoOfTweetsToGet = NoOfTweetsToGet;
+        _getTweetsViaStreamByTimeAsyncUoW.NoOfMilliseconds = NoOfMilliseconds;
 
-        var tweets = _getNTweetsViaTwitterStreamUoW.Execute();
+        var tweets = await _getTweetsViaStreamByTimeAsyncUoW.Execute();
 
         var tweetStatistics = new TweetStatistics
         {

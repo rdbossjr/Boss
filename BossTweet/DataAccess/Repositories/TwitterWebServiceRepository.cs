@@ -1,6 +1,7 @@
 ﻿using BossTweet.Core.Entities.Twitter;
 using BossTweet.DataAccess.Interfaces;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace BossTweet.DataAccess.Repositories;
 
@@ -68,6 +69,46 @@ public class TwitterWebServiceRepository : ITwitterWebServiceRepository
 
             returnList.Add(tDeserialized);
         }
+
+        return returnList;
+    }
+
+    public async Task<List<Tweet>> GetStreamSerializedToObjectsOverTime(int milliseconds = 10000)
+    {
+        var returnList = new List<Tweet>();
+        var httpClient = WebServiceContext.Client;
+        var requestUri = WebServiceContext.EndPointUrl;
+        var returnBuilder = new StringBuilder("[");
+
+        if (!string.IsNullOrWhiteSpace(WebServiceContext.BearerAuthorization))
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer",
+                WebServiceContext.BearerAuthorization);
+        }
+
+        httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+
+        var stream = await httpClient.GetStreamAsync(requestUri);
+
+        using var reader = new StreamReader(stream);
+
+        var endTime = DateTime.Now.AddMilliseconds(milliseconds);
+
+        while (DateTime.Now < endTime)
+        {
+            var lineRead = await reader.ReadLineAsync();
+
+            if (string.IsNullOrWhiteSpace(lineRead)) continue;
+
+            returnBuilder.AppendLine($"{lineRead},");
+        }
+
+        var builderString = $"{returnBuilder.ToString().TrimEnd(',')}]";
+
+        var tDeserialized = JsonConvert.DeserializeObject<List<Tweet>>(builderString, new JsonSerializerSettings());
+
+        returnList.AddRange(tDeserialized);
 
         return returnList;
     }

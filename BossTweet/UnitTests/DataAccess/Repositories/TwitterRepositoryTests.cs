@@ -1,25 +1,21 @@
-using BossTweet.DataAccess;
 using BossTweet.DataAccess.Contexts;
 using BossTweet.DataAccess.Repositories;
 
-namespace BossTweet.UnitTests;
+namespace BossTweet.UnitTests.DataAccess.Repositories;
 
 [TestClass]
-public class TwitterRepositoryTests
+public class TwitterRepositoryTests : TestBase
 {
-    // Added sleep due Twitter Service exception:
-    // Response status code does not indicate success: 429 (Too Many Requests).
-    // When run by itself, it passes
     [TestMethod]
     public void GetStreamSerializedNoQueryStringTest()
     {
-        Thread.Sleep(2000);
+        Thread.Sleep(SleepTimeMil);
 
         var twitterConfig = new TwitterWebServiceContextConfiguration
         {
             BaseURI = "https://api.twitter.com/2/tweets/",
 
-            BearerToken = "" // TODO: GET BEARER TOKEN FROM DAVID;
+            BearerToken = TwitterBearerToken
         };
 
         var twitterContext = new TwitterWebServiceContext(twitterConfig);
@@ -35,19 +31,42 @@ public class TwitterRepositoryTests
         Assert.AreEqual(response.Count, 100);
     }
 
+    [TestMethod]
+    public async Task GetStreamSerializedToObjectsOverTimeTest()
+    {
+        Thread.Sleep(SleepTimeMil);
+
+        var twitterConfig = new TwitterWebServiceContextConfiguration
+        {
+            BaseURI = "https://api.twitter.com/2/tweets/",
+
+            BearerToken = TwitterBearerToken
+        };
+
+        var twitterContext = new TwitterWebServiceContext(twitterConfig);
+
+        twitterContext.EndPointRoute = "sample/stream";
+
+        var twitterRepository = new TwitterWebServiceRepository(twitterContext);
+
+        var response = await twitterRepository.GetStreamSerializedToObjectsOverTime();
+
+        Assert.IsNotNull(response);
+    }
+
     // Added sleep due Twitter Service exception:
     // Response status code does not indicate success: 429 (Too Many Requests).
     // When run by itself, it passes
     [TestMethod]
     public void GetStreamSerializedWithQueryStringTest()
     {
-        Thread.Sleep(2000);
+        Thread.Sleep(SleepTimeMil);
 
         var twitterConfig = new TwitterWebServiceContextConfiguration
         {
             BaseURI = "https://api.twitter.com/2/tweets/",
 
-            BearerToken = "" //TODO: GET BEARER TOKEN FROM DAVID;
+            BearerToken = TwitterBearerToken
         };
 
         var twitterContext = new TwitterWebServiceContext(twitterConfig);
