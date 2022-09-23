@@ -1,6 +1,6 @@
-using BossTweet.DataAccess;
+using BossTweet.DataAccess.Contexts;
 
-namespace BossTweet.UnitTests;
+namespace BossTweet.UnitTests.DataAccess.Repositories;
 
 [TestClass]
 public class TwitterWebServiceContextTests

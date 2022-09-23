@@ -1,29 +1,28 @@
-using BossTweet.Business;
 using BossTweet.Business.UnitofWorks;
-using BossTweet.DataAccess;
 using BossTweet.DataAccess.Contexts;
 using BossTweet.DataAccess.Repositories;
 
-namespace BossTweet.UnitTests;
+namespace BossTweet.UnitTests.Business.UnitofWorks;
 
 [TestClass]
-public class GetNTweetsViaTwitterStreamUoWTests
+public class GetNTweetsViaTwitterStreamUoWTests : TestBase
 {
     [TestMethod]
     public void GetNTweetsViaTwitterStreamUoWExecuteTest()
     {
-        Thread.Sleep(2000);
+        Thread.Sleep(SleepTimeMil);
 
         var twitterConfig = new TwitterWebServiceContextConfiguration
         {
             BaseURI = "https://api.twitter.com/2/tweets/",
 
-            BearerToken = "" //TODO: GET BEARER TOKEN FROM DAVID;
+            BearerToken = TwitterBearerToken
         };
 
-        var twitterContext = new TwitterWebServiceContext(twitterConfig);
-
-        twitterContext.EndPointRoute = "sample/stream";
+        var twitterContext = new TwitterWebServiceContext(twitterConfig)
+        {
+            EndPointRoute = "sample/stream"
+        };
 
         var twitterRepository = new TwitterWebServiceRepository(twitterContext);
 

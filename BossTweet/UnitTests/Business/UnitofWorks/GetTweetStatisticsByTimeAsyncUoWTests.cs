@@ -1,24 +1,22 @@
-﻿using BossTweet.Business;
-using BossTweet.Business.UnitofWorks;
-using BossTweet.DataAccess;
+﻿using BossTweet.Business.UnitofWorks;
 using BossTweet.DataAccess.Contexts;
 using BossTweet.DataAccess.Repositories;
 
-namespace BossTweet.UnitTests
+namespace BossTweet.UnitTests.Business.UnitofWorks
 {
     [TestClass]
-    public class GetTweetStatisticsUoWTests
+    public class GetTweetStatisticsByTimeAsyncUoWTests : TestBase
     {
         [TestMethod]
-        public void GetTweetStatisticsUoWExecuteTest()
+        public async Task GetTweetStatisticsByTimeAsyncUoWExecuteTest()
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(SleepTimeMil);
 
             var twitterConfig = new TwitterWebServiceContextConfiguration
             {
                 BaseURI = "https://api.twitter.com/2/tweets/",
 
-                BearerToken = "" //TODO: GET BEARER TOKEN FROM DAVID;
+                BearerToken = TwitterBearerToken
             };
 
             var twitterContext = new TwitterWebServiceContext(twitterConfig)
@@ -28,11 +26,12 @@ namespace BossTweet.UnitTests
 
             var twitterRepository = new TwitterWebServiceRepository(twitterContext);
 
-            var uow = new GetTweetStatisticsUoW(new GetNTweetsViaTwitterStreamUoW(twitterRepository));
+            var uow = new GetTweetStatisticsByTimeAsyncUoW(new GetTweetsViaStreamByTimeAsyncUoW(twitterRepository))
+            {
+                NoOfMilliseconds = 5000
+            };
 
-            uow.NoOfTweetsToGet = 100;
-
-            var response = uow.Execute();
+            var response = await uow.Execute();
 
             Assert.IsNotNull(response);
 

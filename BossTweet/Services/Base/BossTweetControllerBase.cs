@@ -8,6 +8,26 @@ namespace BossTweet.Services.Base;
 
 public class BossTweetControllerBase : Controller
 {
+    protected virtual IActionResult CreateActionResult<T>(IServiceReturnObject<T> returnObject, string? friendlyError = null)
+    {
+        if (returnObject.ReturnException == null)
+        {
+            return Ok(returnObject);
+        }
+
+        if (!string.IsNullOrWhiteSpace(friendlyError))
+        {
+            returnObject.ReturnMessage = friendlyError;
+        }
+
+        //TODO: more types of errors?
+        const int statusCode = (int)HttpStatusCode.InternalServerError;
+
+        return StatusCode(
+            statusCode,
+            returnObject);
+    }
+
     protected async Task<IServiceReturnObject<T>> ExecuteAndSetServiceReturnObject<T>(IAsyncUnitofWork<T> uow)
     {
         var returnObject = new ServiceReturnObject<T>();
@@ -60,25 +80,5 @@ public class BossTweetControllerBase : Controller
         returnObject.ReturnCode = ex.HResult;
         returnObject.ReturnMessage = message;
         returnObject.ReturnException = exception.CreateNewReturnException();
-    }
-
-    protected virtual IActionResult CreateActionResult<T>(IServiceReturnObject<T> returnObject, string? friendlyError = null)
-    {
-        if (returnObject.ReturnException == null)
-        {
-            return Ok(returnObject);
-        }
-
-        if (!string.IsNullOrWhiteSpace(friendlyError))
-        {
-            returnObject.ReturnMessage = friendlyError;
-        }
-
-        //TODO: more types of errors?
-        const int statusCode = (int)HttpStatusCode.InternalServerError;
-
-        return StatusCode(
-            statusCode,
-            returnObject);
     }
 }

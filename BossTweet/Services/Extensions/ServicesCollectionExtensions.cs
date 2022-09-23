@@ -37,5 +37,4 @@ public static class ServiceCollectionExtensions
             services.AddTransient(currentInterface, implementation);
         }
     }
-
 }

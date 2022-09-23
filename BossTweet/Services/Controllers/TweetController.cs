@@ -1,10 +1,9 @@
-﻿using BossTweet.Core.Entities;
+﻿using BossTweet.Business.Interfaces;
+using BossTweet.Core.Entities;
 using BossTweet.Core.Services;
+using BossTweet.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using BossTweet.Services.Base;
-using BossTweet.DataAccess.Interfaces;
-using BossTweet.Business.Interfaces;
 
 namespace BossTweet.Services.Controllers;
 
@@ -12,26 +11,33 @@ namespace BossTweet.Services.Controllers;
 [ApiController]
 public class TweetController : BossTweetControllerBase
 {
-    private readonly IGetNTweetsViaTwitterStreamUoW _getNTweetsViaTwitterStream;
-    private readonly ITwitterWebServiceRepository _repository;
     private readonly IGetTweetStatisticsUoW _getTweetStatisticsUoW;
+    private readonly IGetTweetsViaStreamByTimeAsyncUoW _getTweetsViaStreamByTimeAsyncUoW;
 
     public TweetController(
-        IGetTweetStatisticsUoW getTweetStatisticsUoW, 
-        IGetNTweetsViaTwitterStreamUoW getNTweetsViaTwitterStream,
-        ITwitterWebServiceRepository repository)
+        IGetTweetStatisticsUoW getTweetStatisticsUoW,
+        IGetTweetsViaStreamByTimeAsyncUoW getTweetsViaStreamByTimeAsyncUoW)
     {
         _getTweetStatisticsUoW = getTweetStatisticsUoW;
-        _getNTweetsViaTwitterStream = getNTweetsViaTwitterStream;
-        _repository = repository;
+        _getTweetsViaStreamByTimeAsyncUoW = getTweetsViaStreamByTimeAsyncUoW;
     }
 
-    [Route("{numberOfTweetsToSample}")]
+    [Route("StatsByNumberOfTweets/{numberOfTweetsToSample}")]
     [HttpGet]
     [ProducesResponseType(typeof(ServiceReturnObject<ITweetStatistics>), (int)HttpStatusCode.OK)]
-    public IActionResult GetTweetStatistics(int numberOfTweetsToSample)
+    public IActionResult GetTweetStatistics(int numberOfTweetsToSample = 1000)
     {
         _getTweetStatisticsUoW.NoOfTweetsToGet = numberOfTweetsToSample;
+        var returnObject = ExecuteAndSetServiceReturnObject(_getTweetStatisticsUoW);
+        return CreateActionResult(returnObject);
+    }
+
+    [Route("StatsByStreamTime/{millisecondsToStream}")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ServiceReturnObject<ITweetStatistics>), (int)HttpStatusCode.OK)]
+    public IActionResult GetTweetStatisticsByTime(int millisecondsToStream = 10000)
+    {
+        _getTweetsViaStreamByTimeAsyncUoW.NoOfMilliseconds = millisecondsToStream;
         var returnObject = ExecuteAndSetServiceReturnObject(_getTweetStatisticsUoW);
         return CreateActionResult(returnObject);
     }

@@ -5,24 +5,24 @@ using BossTweet.DataAccess.Interfaces;
 
 namespace BossTweet.Business.UnitofWorks;
 
-public class GetNTweetsViaTwitterStreamUoW : UnitofWorkBase<IList<Tweet>>, IGetNTweetsViaTwitterStreamUoW
+public class GetTweetsViaStreamByTimeAsyncUoW : AsyncUnitofWorkBase<IList<Tweet>>, IGetTweetsViaStreamByTimeAsyncUoW
 {
-    public GetNTweetsViaTwitterStreamUoW(ITwitterWebServiceRepository repository)
+    public GetTweetsViaStreamByTimeAsyncUoW(ITwitterWebServiceRepository repository)
     {
         Repository = repository;
     }
 
-    public int NoOfTweetsToGet { get; set; } = 1000;
+    public int NoOfMilliseconds { get; set; } = 1000;
 
     public ITwitterWebServiceRepository Repository { get; }
 
-    protected override IList<Tweet> ImplementExecute()
+    protected override async Task<IList<Tweet>> ImplementExecute()
     {
         Repository.WebServiceContext.EndPointRoute = "sample/stream";
 
         var returnList = new List<Tweet>();
 
-        var response = Repository.GetStreamSerializedToObjects(NoOfTweetsToGet);
+        var response = await Repository.GetStreamSerializedToObjectsOverTime(NoOfMilliseconds);
 
         if (response.Any())
         {

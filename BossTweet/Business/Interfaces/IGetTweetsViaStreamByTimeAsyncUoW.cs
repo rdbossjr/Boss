@@ -4,9 +4,9 @@ using BossTweet.DataAccess.Interfaces;
 
 namespace BossTweet.Business.Interfaces;
 
-public interface IGetNTweetsViaTwitterStreamUoW : IUnitofWork<IList<Tweet>>
+public interface IGetTweetsViaStreamByTimeAsyncUoW : IAsyncUnitofWork<IList<Tweet>>
 {
-    int NoOfTweetsToGet { get; set; }
+    int NoOfMilliseconds { get; set; }
 
     ITwitterWebServiceRepository Repository { get; }
 }
